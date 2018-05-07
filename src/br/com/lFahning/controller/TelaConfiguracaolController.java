@@ -76,11 +76,11 @@ public class TelaConfiguracaolController {
                 try {
                     int diferencaAlarmes = verificarQtDiferencaAlarmes();
                     if (diferencaAlarmes != 0) {
-                        integrarDiferenca();
+                        integrarDiferencaAlarmes();
                     }
-                    int diferencaAlarmes = verificarQtDiferencaAlarmes();
-                    if (diferencaAlarmes != 0) {
-                        integrarDiferenca();
+                    int diferencaGraficos = verificarQtDiferencaGraficos();
+                    if (diferencaGraficos != 0) {
+                        integrarDiferencaGraficos();
                     }
                 } catch (SQLException ex) {
                     JOptionPane.showMessageDialog(tela, "Ocorreu uma falha na integração!", "Erro", JOptionPane.ERROR_MESSAGE);
@@ -128,7 +128,15 @@ public class TelaConfiguracaolController {
         }
     }
 
-    private void integrarDiferenca() {
+    private void integrarDiferencaAlarmes() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    private int verificarQtDiferencaGraficos() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    private void integrarDiferencaGraficos() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
