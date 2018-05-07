@@ -49,7 +49,9 @@ public class TelaConfiguracaolController {
     public void iniciarIntegracao() {
         try {
             validarCampos();
+            System.out.println("Validou campos");
             iniciarTarefaIntegracao();
+            System.out.println("Iniciou integração");
             tela.desabilitarCamposDaTela();
             tela.setState(JFrame.ICONIFIED);
         } catch (InterruptedException ex) {
@@ -65,12 +67,18 @@ public class TelaConfiguracaolController {
         ActionListener taskPerformer = (ActionEvent evt) -> {
             try {
                 int diferencaAlarmes = getQtDiferencaAlarmes();
+                System.out.println("Diferença Alarmes: " + diferencaAlarmes);
                 if (diferencaAlarmes > 0) {
+                    System.out.println("Vai integrar alarmes: " + diferencaAlarmes);
                     integrarDiferencaAlarmes(diferencaAlarmes);
+                    System.out.println("integrou alarmes: " + diferencaAlarmes);
                 }
                 int diferencaGraficos = getQtDiferencaGraficos();
+                System.out.println("Diferença Gráficos: " + diferencaGraficos);
                 if (diferencaGraficos > 0) {
+                    System.out.println("Vai integrar gráficos: " + diferencaGraficos);
                     integrarDiferencaGraficos(diferencaGraficos);
+                    System.out.println("integrou gráficos: " + diferencaGraficos);
                 }
             } catch (SQLException ex) {
                 JOptionPane.showMessageDialog(tela, "Ocorreu uma falha na integração!\n"
