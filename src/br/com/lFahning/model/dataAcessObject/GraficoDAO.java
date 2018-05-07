@@ -39,7 +39,7 @@ public class GraficoDAO extends DAO<Grafico> {
                     "select * from grafico order by substring(data, 7, 4),"
                     + " substring(data, 4, 2), substring(data, 1, 2), hora");
             while (rs.next()) {
-                graficos.add(InstantElementFromResultSet(rs));
+                graficos.add(InstantGraficoFromResultSet(rs));
             }
         } catch (SQLException ex) {
             throw ex;
@@ -59,7 +59,7 @@ public class GraficoDAO extends DAO<Grafico> {
             prepararStmtSelectElement(pstmt, g);
             rs = pstmt.executeQuery();
             if (rs.next()) {
-                return InstantElementFromResultSet(rs);
+                return InstantGraficoFromResultSet(rs);
             }
         } catch (SQLException ex) {
             throw ex;
@@ -97,7 +97,7 @@ public class GraficoDAO extends DAO<Grafico> {
         pstmt.setString(++i, g.getHora());
     }
 
-    private Grafico InstantElementFromResultSet(ResultSet rs) throws SQLException {
+    private Grafico InstantGraficoFromResultSet(ResultSet rs) throws SQLException {
         Grafico g = new Grafico();
         g.setData(rs.getString("data"));
         g.setHora(rs.getString("hora"));
@@ -117,6 +117,47 @@ public class GraficoDAO extends DAO<Grafico> {
         g.setTaxapenet(rs.getFloat("TAXAPENET"));
         g.setTorque(rs.getFloat("TORQUE"));
         return g;
+    }
+
+    public int getQtGraficos(Connection connection) throws SQLException {
+        int qt = 0;
+        ResultSet rs = null;
+        Statement stmt = null;
+        try {
+            rs = execSelect(connection, stmt, "select count(*) as qtd from grafico");
+            if (rs.next()) {
+                qt = rs.getInt("qtd");
+            }
+        } catch (SQLException ex) {
+            throw ex;
+        } finally {
+            closeRs(rs);
+            closeStmt(stmt);
+        }
+        return qt;
+    }
+
+    public List<Grafico> getUltimosGraficos(Connection connection, int qt) throws SQLException {
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        List<Grafico> graficos = new ArrayList<>();
+        try {
+            pstmt = connection.prepareStatement(
+                    "select * from (select rownum as seq, a.* from grafico a "
+                            + "order by substring(a.data, 7, 4), substring(a.data, 4, 2), "
+                            + "substring(a.data, 1, 2), a.hora) where seq >= ?");
+            pstmt.setInt(1, qt);
+            rs = pstmt.executeQuery();
+            while (rs.next()) {
+                graficos.add(InstantGraficoFromResultSet(rs));
+            }
+        } catch (SQLException ex) {
+            throw ex;
+        } finally {
+            closePstmt(pstmt);
+            closeRs(rs);
+        }
+        return graficos;
     }
 
 }

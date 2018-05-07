@@ -68,7 +68,49 @@ public class AlarmeDAO extends DAO<Alarme> {
         }
         return null;
     }
+    public List<Alarme> getUltimosAlarmes(Connection connection, int qtUltimosRegistros) throws SQLException {
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        List<Alarme> alarmes = new ArrayList<>();
+        try {
+            pstmt = connection.prepareStatement(
+                    "select * from (select rownum as seq, a.* from alarmes a "
+                            + "order by substring(a.data, 7, 4), substring(a.data, 4, 2), "
+                            + "substring(a.data, 1, 2), a.hora) where seq >= ?");
+            pstmt.setInt(1, qtUltimosRegistros);
+            rs = pstmt.executeQuery();
+            while (rs.next()) {
+                alarmes.add(InstantAlarmeFromResultSet(rs));
+            }
+        } catch (SQLException ex) {
+            throw ex;
+        } finally {
+            closePstmt(pstmt);
+            closeRs(rs);
+        }
+        return alarmes;
+    }
+    
+    
 
+    public int getQtAlarmes(Connection connection) throws SQLException {
+        int qt = 0;
+        ResultSet rs = null;
+        Statement stmt = null;
+        try {
+            rs = execSelect(connection, stmt, "select count(*) as qtd from alarmes");
+            if (rs.next()) {
+                qt = rs.getInt("qtd");
+            }
+        } catch (SQLException ex) {
+            throw ex;
+        } finally {
+            closeRs(rs);
+            closeStmt(stmt);
+        }
+        return qt;
+    }
+    
     private void prepararStmtInsert(PreparedStatement pstmt, Alarme a) throws SQLException {
         int i = 0;
         pstmt.setString(++i, a.getData());

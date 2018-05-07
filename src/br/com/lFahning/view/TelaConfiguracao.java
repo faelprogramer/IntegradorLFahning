@@ -30,6 +30,17 @@ public class TelaConfiguracao extends javax.swing.JFrame {
             controller.iniciarIntegracao();
         });
     }
+    
+    public void desabilitarCamposDaTela() {
+        getBtn_iniciarIntegracao().setEnabled(false);
+        getBtn_selecionarArquivo().setEnabled(false);
+        getTxt_arquivo().setEnabled(false);
+        getTxt_banco().setEnabled(false);
+        getTxt_porta().setEnabled(false);
+        getTxt_senha().setEnabled(false);
+        getTxt_servidor().setEnabled(false);
+        getTxt_usuario().setEnabled(false);
+    }
 
     //<editor-fold defaultstate="collapsed" desc=" Códigos gerados ">
     @SuppressWarnings("unchecked")
