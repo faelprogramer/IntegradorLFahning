@@ -50,10 +50,8 @@ public class TelaConfiguracaolController {
         try {
             validarCampos();
             tela.desabilitarCamposDaTela();
-            System.out.println("Validou campos");
-            iniciarTarefaIntegracao();
-            System.out.println("Iniciou integração");
             tela.setState(JFrame.ICONIFIED);
+            iniciarTarefaIntegracao();
         } catch (InterruptedException ex) {
             JOptionPane.showMessageDialog(tela, "Ocorreu um erro na execução da integração!");
         } catch (Exception ex) {
@@ -63,27 +61,10 @@ public class TelaConfiguracaolController {
     }
 
     private void iniciarTarefaIntegracao() throws InterruptedException, Exception {
+        actionIntegracao();
         int delay = 10000;
         ActionListener taskPerformer = (ActionEvent evt) -> {
-            try {
-                int diferencaAlarmes = getQtDiferencaAlarmes();
-                System.out.println("Diferença Alarmes: " + diferencaAlarmes);
-                if (diferencaAlarmes > 0) {
-                    System.out.println("Vai integrar alarmes: " + diferencaAlarmes);
-                    integrarDiferencaAlarmes(diferencaAlarmes);
-                    System.out.println("integrou alarmes: " + diferencaAlarmes);
-                }
-                int diferencaGraficos = getQtDiferencaGraficos();
-                System.out.println("Diferença Gráficos: " + diferencaGraficos);
-                if (diferencaGraficos > 0) {
-                    System.out.println("Vai integrar gráficos: " + diferencaGraficos);
-                    integrarDiferencaGraficos(diferencaGraficos);
-                    System.out.println("integrou gráficos: " + diferencaGraficos);
-                }
-            } catch (SQLException ex) {
-                JOptionPane.showMessageDialog(tela, "Ocorreu uma falha na integração!\n"
-                        + ex.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
-            }
+            actionIntegracao();
         };
         new Timer(delay, taskPerformer).start();
     }
@@ -197,9 +178,12 @@ public class TelaConfiguracaolController {
             List<Grafico> graficos = consultarUltimosGraficosAccess(diferenca);
             connection = getConnectionMySQL();
             GraficoDAO graficoDAO = new GraficoDAO();
+            int contador = 0;
             for (Grafico grafico : graficos) {
                 graficoDAO.insert(connection, grafico);
+                contador++;
             }
+            contador = contador + 0;
         } catch (SQLException | NumberFormatException ex) {
             throw ex;
         } finally {
@@ -228,6 +212,22 @@ public class TelaConfiguracaolController {
                 Integer.valueOf(tela.getTxt_porta().getText()),
                 tela.getTxt_usuario().getText(), tela.getTxt_senha().getText(),
                 tela.getTxt_banco().getText());
+    }
+
+    private void actionIntegracao() {
+        try {
+            int diferencaAlarmes = getQtDiferencaAlarmes();
+            if (diferencaAlarmes > 0) {
+                integrarDiferencaAlarmes(diferencaAlarmes);
+            }
+            int diferencaGraficos = getQtDiferencaGraficos();
+            if (diferencaGraficos > 0) {
+                integrarDiferencaGraficos(diferencaGraficos);
+            }
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(tela, "Ocorreu uma falha na integração!\n"
+                    + ex.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+        }
     }
 
 }
