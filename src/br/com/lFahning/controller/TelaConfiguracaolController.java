@@ -49,10 +49,10 @@ public class TelaConfiguracaolController {
     public void iniciarIntegracao() {
         try {
             validarCampos();
+            tela.desabilitarCamposDaTela();
             System.out.println("Validou campos");
             iniciarTarefaIntegracao();
             System.out.println("Iniciou integração");
-            tela.desabilitarCamposDaTela();
             tela.setState(JFrame.ICONIFIED);
         } catch (InterruptedException ex) {
             JOptionPane.showMessageDialog(tela, "Ocorreu um erro na execução da integração!");
