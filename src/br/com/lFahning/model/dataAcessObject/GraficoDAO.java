@@ -143,9 +143,10 @@ public class GraficoDAO extends DAO<Grafico> {
         List<Grafico> graficos = new ArrayList<>();
         try {
             pstmt = connection.prepareStatement(
-                    "select * from (select rownum as seq, a.* from grafico a "
-                            + "order by substring(a.data, 7, 4), substring(a.data, 4, 2), "
-                            + "substring(a.data, 1, 2), a.hora) where seq >= ?");
+                    "select * from (select * from (select rownum as seq, a.* "
+                            + "from grafico a order by substring(a.data, 7, 4) desc, "
+                            + "substring(a.data, 4, 2) desc, substring(a.data, 1, 2) desc, "
+                            + "a.hora desc) order by seq desc) where rownum <= ?");
             pstmt.setInt(1, qt);
             rs = pstmt.executeQuery();
             while (rs.next()) {

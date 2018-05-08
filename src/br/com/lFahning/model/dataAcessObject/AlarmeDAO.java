@@ -74,10 +74,12 @@ public class AlarmeDAO extends DAO<Alarme> {
         List<Alarme> alarmes = new ArrayList<>();
         try {
             pstmt = connection.prepareStatement(
-                    "select * from (select rownum as seq, a.* from alarmes a "
-                            + "order by substring(a.data, 7, 4), substring(a.data, 4, 2), "
-                            + "substring(a.data, 1, 2), a.hora) where seq >= ?");
+                    "select * from(select * from (select rownum as seq, a.* from "
+                            + "alarmes a order by substring(a.data, 7, 4) desc, "
+                            + "substring(a.data, 4, 2) desc, substring(a.data, 1, 2) "
+                            + "desc, a.hora desc) order by seq desc) where rownum <= ?");
             pstmt.setInt(1, qtUltimosRegistros);
+
             rs = pstmt.executeQuery();
             while (rs.next()) {
                 alarmes.add(InstantAlarmeFromResultSet(rs));

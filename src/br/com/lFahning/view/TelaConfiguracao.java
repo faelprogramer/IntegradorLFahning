@@ -18,8 +18,11 @@ public class TelaConfiguracao extends javax.swing.JFrame {
         initComponents();
         addActions();
         setLocationRelativeTo(null);
+        setInformacoesPadrao();
         setVisible(true);
         controller = new TelaConfiguracaolController(this);
+        getRootPane().setDefaultButton(btn_iniciarIntegracao);
+        btn_iniciarIntegracao.requestFocus();
     }
     
     private void addActions() {
@@ -32,14 +35,14 @@ public class TelaConfiguracao extends javax.swing.JFrame {
     }
     
     public void desabilitarCamposDaTela() {
-        getBtn_iniciarIntegracao().setEnabled(false);
-        getBtn_selecionarArquivo().setEnabled(false);
-        getTxt_arquivo().setEnabled(false);
-        getTxt_banco().setEnabled(false);
-        getTxt_porta().setEnabled(false);
-        getTxt_senha().setEnabled(false);
-        getTxt_servidor().setEnabled(false);
-        getTxt_usuario().setEnabled(false);
+        btn_iniciarIntegracao.setEnabled(false);
+        btn_selecionarArquivo.setEnabled(false);
+        txt_arquivo.setEnabled(false);
+        txt_banco.setEnabled(false);
+        txt_porta.setEnabled(false);
+        txt_senha.setEnabled(false);
+        txt_servidor.setEnabled(false);
+        txt_usuario.setEnabled(false);
     }
 
     //<editor-fold defaultstate="collapsed" desc=" Códigos gerados ">
@@ -243,5 +246,14 @@ public class TelaConfiguracao extends javax.swing.JFrame {
         return txt_usuario;
     }
     //</editor-fold>
+
+    private void setInformacoesPadrao() {
+        txt_arquivo.setText("/Users/fael/Desktop/WCSIM20141229.MDB");
+        txt_banco.setText("UMCK");
+        txt_porta.setText("3306");
+        txt_senha.setText("admin");
+        txt_servidor.setText("192.168.15.10");
+        txt_usuario.setText("admin");
+    }
     
 }
